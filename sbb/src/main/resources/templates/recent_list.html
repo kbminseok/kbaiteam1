@@ -1,0 +1,36 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content" class="container my-3">
+    <div class="d-flex gap-4 align-items-center">
+        <H3>최근 답변</H3>
+        <h5 class="text-secondary">가장 최근에 달린 답변 15개까지 나타납니다.</h5>
+    </div>
+    <table class="table">
+        <thead class="table-dark">
+        <tr class="text-center">
+            <th>구분</th>
+            <th>글쓴이</th>
+            <th style="width:50%">제목(내용)</th>
+            <th>날짜</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-center" th:each="answer, loop : ${answerList}">
+            <td th:text="${answer.question.categoryAsString}">-</td>
+            <td th:text="${answer.author.username}"></td>
+            <td class="text-start">
+                <a th:href="@{|/question/detail/${answer.question.id}#answer_${answer.id}|}">
+                    <div class="d-flex gap-1">
+                    <p th:if="${answer.question.subject.length() <= 10}" th:text="${'('+answer.question.subject + ')'}"></p>
+                    <p th:if="${answer.question.subject.length() > 10}" th:text="${'('+answer.question.subject.substring(0,10) + '...)'}"></p>
+
+                    <p th:if="${answer.content.length() <= 10}" th:text="${'('+answer.content + ')'}"></p>
+                    <p th:if="${answer.content.length() > 10}" th:text="${'('+answer.content.substring(0,10) + '...)'}"></p>
+                    </div>
+                </a>
+            </td>
+            <td th:text="${#temporals.format(answer.createDate, 'yyyy년 M월 d일 h:mm a')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</html>

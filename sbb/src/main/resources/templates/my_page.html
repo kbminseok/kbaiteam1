@@ -1,0 +1,112 @@
+<html layout:decorate="~{layout.html}">
+<head>
+    <title>마이페이지</title>
+</head>
+<body>
+<main layout:fragment="content" class="container d-flex flex-column max-width-xl align-items-center justify-content-center gap-3">
+  <div th:if="${successMessage !=null}"} class="alert alert-success" th:text="${successMessage}" style="text-align: center; margin-top:10px"></div>
+    <div class="card d-flex flex-column align-items-center" style="margin-top : 10px;">
+        <div class="card-body gap-3">
+            <div class="d-flex align-items-baseline justify-content-center gap-2">
+                <i class="fa-solid fa-user" style="color: #75a8ff;"></i>
+                <p>내 정보</p>
+            </div>
+            <div class="d-flex align-items-baseline gap-1">
+                <i class="fa-regular fa-circle-check" style="color: #91c0fd;"></i>
+                <p>사용자 Id :</p>
+                <p th:text="${user.username}"></p>
+            </div>
+            <div class="d-flex gap-1 align-items-baseline">
+                <i class="fa-regular fa-circle-check" style="color: #91c0fd;"></i>
+                <p>e-mail :</p>
+                <p th:text="${user.email}"></p>
+            </div>
+              <div class="d-flex gap-1 align-items-baseline justify-content-center container-fluid">
+                <a href="/user/change/passwd" class="btn btn-outline-primary col-12 d-flex align-items-center justify-content-center">
+                    <span>비밀번호 변경</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card d-flex flex-column align-items-center" style="margin-top : 10px;">
+        <div class="card-body gap-3">
+            <div class="d-flex align-items-baseline justify-content-center gap-2">
+                <i class="fa-solid fa-user" style="color: #75a8ff;"></i>
+                <p>나의 질문</p>
+                <p th:text="${'('+ questionCount+')'}"></p>
+                 <a th:href="@{|/question/list/byQuestion/${user.id}|}">더보기</a>
+            </div>
+            <table class="table">
+                <thead class="table-dark">
+                <tr class="text-center">
+                    <th>제목</th>
+                    <th>작성일</th>
+                    <th>수정일</th>
+                    <th>조회수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-center" th:each="question, loop : ${questionList}">
+                    <td class="text-start">
+                        <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"
+                           style="min-width:80px; padding: 12px 0;"></a>
+                        <span class="text-danger small ms-2"
+                              th:if="${#lists.size(question.answerList) > 0}"
+                              th:text="${#lists.size(question.answerList)}">
+                        </span>
+                    </td>
+                    <td th:text="${#temporals.format(question.createDate, 'yy-MM-dd')}"
+                        style="min-width:80px; padding: 12px 0;"></td>
+                    <td th:if="${question.modifyDate == null}">-</td>
+                    <td th:if="${question.modifyDate != null}" th:text="${#temporals.format(question.modifyDate, 'yy-MM-dd')}"
+                        style="min-width:80px; padding: 12px 0;"></td>
+                    <td th:text="${question.view}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card d-flex flex-column align-items-center" style="margin-top : 10px;">
+        <div class="card-body gap-3">
+            <div class="d-flex align-items-baseline justify-content-center gap-2">
+                <i class="fa-solid fa-user" style="color: #75a8ff;"></i>
+                <p>나의 답변</p>
+                <p th:text="${'('+ answerCount+')'}"></p>
+               <a th:href="@{|/question/list/byAnswer/${user.id}|}">더보기</a>
+            </div>
+            <table class="table">
+                <thead class="table-dark">
+                <tr class="text-center">
+                    <th>제목</th>
+                    <th>작성일</th>
+                    <th>수정일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-center" th:each="answer, loop : ${answerList}">
+                    <td class="text-start">
+                        <div class="d-flex gap-2 align-items-baseline">
+                        <i class="fa-regular fa-circle-question" style="color: #75a8ff;"></i>
+                           <a th:href="@{|/question/detail/${answer.question.id}#answer_${answer.id}|}" th:text="${answer.question.subject}"
+                           style="min-width:80px; padding: 12px 0;"></a>
+                        </div>
+                        <div class="d-flex gap-2 align-items-baseline">
+                            <i class="fa-solid fa-a" style="color: #75a8ff;"></i>
+                            <span th:text="${answer.content}" style="min-width:80px; padding: 12px 0;"></span>
+                        </div>
+                    </td>
+                    <td th:text="${#temporals.format(answer.createDate, 'yy-MM-dd')}"
+                        style="min-width:80px; padding: 12px 0;"></td>
+                    <td th:if="${answer.modifyDate == null}">-</td>
+                    <td th:if="${answer.modifyDate != null}" th:text="${#temporals.format(answer.modifyDate, 'yy-MM-dd')}"
+                        style="min-width:80px; padding: 12px 0;"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+</html>
